@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# INSTALL
-# 1- install svgo script read https://github.com/svg/svgo
-# 2- install inkscape https://inkscape.org/fr/
-# create 2 folders "input" and "output" with good permissions
-# place all svg files inside the folder "input"
-# run this script
-# get your new svg files inside the folder output
-
 INPUT="./input"
 TARGET="./output"
 
