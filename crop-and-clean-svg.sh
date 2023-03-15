@@ -15,17 +15,31 @@ fi;
 
 
 clean(){
+  echo -e "\nclean...";
   OUTPUT_FILE="$1"
-  echo "======>$OUTPUT_FILE"
-  exec svgo -i "$OUTPUT_FILE" --config config.js
+  exec svgo -i "$OUTPUT_FILE" --config config.js &
+  PID=$!
+  wait $PID
 }
 export -f clean;
 
+
+update_viewBox(){
+  echo -e "\nupdate_viewBox...";
+  OUTPUT_FILE="$1"
+  exec sed -E -i '0,/viewBox="(\d*\.?\d+|\s)*(31\.9+)(\d*\.?\d+|\s)*"/{s/(31\.9+)/32/}' "$OUTPUT_FILE" &
+  PID=$!
+  wait $PID
+}
+export -f update_viewBox;
+
 crop(){
+  echo -e "\ncrop...";
   INPUT_FILE="$1"
   OUTPUT_FILE="$2"
   exec inkscape --actions="export-area-drawing;export-margin:0.1;export-type:svg;export-plain-svg; export-do" $INPUT_FILE  --export-filename="$OUTPUT_FILE" &
-  sleep 1;
+  PID=$!
+  wait $PID
 }
 export -f crop;
 
@@ -38,7 +52,8 @@ process(){
   crop "$INPUT_FILE" "$OUTPUT_FILE";
 
   clean "$OUTPUT_FILE"
-  echo "END"
+  update_viewBox "$OUTPUT_FILE"
+  echo -e "\nfinished!"
 }
 export -f process
 
