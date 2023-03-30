@@ -2,6 +2,7 @@
 
 INPUT="./input"
 TARGET="./output"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 if [ ! -d "$INPUT" ]; then
 	echo "input directory \"$INPUT \" does not exist."
@@ -13,11 +14,11 @@ if [ ! -d "TARGET" ]; then
   mkdir -p "$TARGET";
 fi;
 
-
 clean(){
   echo -e "\nclean...";
   OUTPUT_FILE="$1"
-  exec svgo -i "$OUTPUT_FILE" --config config.js &
+  SCRIPT_DIR="$2"
+  exec svgo -i "$OUTPUT_FILE" --config "$SCRIPT_DIR/config.js" &
   PID=$!
   wait $PID
 }
@@ -51,7 +52,7 @@ process(){
   OUTPUT_FILE="$TARGET/$FILE_NAME";
   crop "$INPUT_FILE" "$OUTPUT_FILE";
 
-  clean "$OUTPUT_FILE"
+  clean "$INPUT_FILE" "$SCRIPT_DIR"
   update_viewBox "$OUTPUT_FILE"
   echo -e "\nfinished!"
 }
